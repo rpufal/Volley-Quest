@@ -1,0 +1,25 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://Scripts/Player2.gd" type="Script" id=1]
+[ext_resource path="res://steve_movement.tres" type="SpriteFrames" id=2]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 9.87842, 9.52555 )
+
+[node name="Player" type="KinematicBody2D"]
+position = Vector2( 0.859131, 2.55952 )
+scale = Vector2( 0.5, 0.5 )
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Sprite" type="AnimatedSprite" parent="."]
+position = Vector2( 0, -168 )
+frames = ExtResource( 2 )
+animation = "walk_nw"
+frame = 6
+playing = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource( 1 )
