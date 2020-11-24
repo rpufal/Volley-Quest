@@ -12,10 +12,15 @@ var character_draw = false
 var target_pos = Vector2()
 var target_direction = Vector2()
 var is_moving = false
+var prepare_serve = false
 var teste_click = false
+var prepare_action = false
+var bola_aqui
 onready var grid = get_parent().get_parent()
 onready var type = grid.TIPOS.PLAYER
 var current_pos 
+onready var Ball = preload("res://Bola.tscn")
+onready var pos_ball = $Sprite/pos_ball
 func cartesian_to_isometric(vector):
 	return Vector2(vector.x - vector.y, (vector.x + vector.y) / 2)
 
@@ -42,63 +47,68 @@ func _physics_process(delta):
 	if character_select == true:
 		
 		##Movimentacao por mouse
-		if teste_click == true:
-			motion = position.direction_to(target_pos) * MAX_SPEED
-			if position.distance_to(target_pos) > 5:
-				motion = move_and_slide(motion)
-			elif position == target_pos:
-				teste_click == false
-		
-		#normal movements
-		if Input.is_action_pressed("up"):
-			direction.y = -1
-			$Sprite.play("walk_n")
-		elif Input.is_action_pressed("down"):
-			direction.y = 1
-			$Sprite.play("walk_s")
+#		if teste_click == true:
+#			motion = position.direction_to(target_pos) * MAX_SPEED
+#			if position.distance_to(target_pos) > 5:
+#				motion = move_and_slide(motion)
+#			elif position == target_pos:
+#				teste_click == false
+		if prepare_action != true:
+			#normal movements
+			if Input.is_action_pressed("up"):
+				direction.y = -1
+				$Sprite.play("walk_n")
+			elif Input.is_action_pressed("down"):
+				direction.y = 1
+				$Sprite.play("walk_s")
 
-		if Input.is_action_pressed("left"):
-			direction.x = -1
-			$Sprite.play("walk_w")
-		elif Input.is_action_pressed("right"):
-			direction.x = 1
-			$Sprite.play("walk_e")
-		
-		#diagonal
-		if Input.is_action_pressed("right") and Input.is_action_pressed("up"):
-			$Sprite.play("walk_ne")
-		elif Input.is_action_pressed("right") and Input.is_action_pressed("down"):
-			$Sprite.play("walk_se")
-		if Input.is_action_pressed("left") and Input.is_action_pressed("down"):
-			$Sprite.play("walk_sw")
-		elif Input.is_action_pressed("up") and Input.is_action_pressed("left"):
-			$Sprite.play("walk_nw")
-		
-		
-		#not moving animation
-		if $Sprite.animation == "walk_n" and direction == Vector2():
-			$Sprite.play("idle_n")
-		elif $Sprite.animation == "walk_s" and direction == Vector2():
-			$Sprite.play("idle_s")
-		elif $Sprite.animation == "walk_w" and direction == Vector2():
-			$Sprite.play("idle_w")
-		elif $Sprite.animation == "walk_e" and direction == Vector2():
-			$Sprite.play("idle_e")
-		elif $Sprite.animation == "walk_nw" and direction == Vector2():
-			$Sprite.play("idle_nw")
-		elif $Sprite.animation == "walk_sw" and direction == Vector2():
-			$Sprite.play("idle_sw")
-		elif $Sprite.animation == "walk_ne" and direction == Vector2():
-			$Sprite.play("idle_ne")
-		elif $Sprite.animation == "walk_se" and direction == Vector2():
-			$Sprite.play("idle_se")
+			if Input.is_action_pressed("left"):
+				direction.x = -1
+				$Sprite.play("walk_w")
+			elif Input.is_action_pressed("right"):
+				direction.x = 1
+				$Sprite.play("walk_e")
+			
+			#diagonal
+			if Input.is_action_pressed("right") and Input.is_action_pressed("up"):
+				$Sprite.play("walk_ne")
+			elif Input.is_action_pressed("right") and Input.is_action_pressed("down"):
+				$Sprite.play("walk_se")
+			if Input.is_action_pressed("left") and Input.is_action_pressed("down"):
+				$Sprite.play("walk_sw")
+			elif Input.is_action_pressed("up") and Input.is_action_pressed("left"):
+				$Sprite.play("walk_nw")
+			
+			
+			#not moving animation
+			if $Sprite.animation == "walk_n" and direction == Vector2():
+				$Sprite.play("idle_n")
+			elif $Sprite.animation == "walk_s" and direction == Vector2():
+				$Sprite.play("idle_s")
+			elif $Sprite.animation == "walk_w" and direction == Vector2():
+				$Sprite.play("idle_w")
+			elif $Sprite.animation == "walk_e" and direction == Vector2():
+				$Sprite.play("idle_e")
+			elif $Sprite.animation == "walk_nw" and direction == Vector2():
+				$Sprite.play("idle_nw")
+			elif $Sprite.animation == "walk_sw" and direction == Vector2():
+				$Sprite.play("idle_sw")
+			elif $Sprite.animation == "walk_ne" and direction == Vector2():
+				$Sprite.play("idle_ne")
+			elif $Sprite.animation == "walk_se" and direction == Vector2():
+				$Sprite.play("idle_se")
 		
 		if Input.is_action_pressed("ui_accept"):
 			print(current_pos)
 			#print(grid.map_to_world(current_pos))
+		if Input.is_action_pressed("serve") and character_select==true:
+			prepare_action = true
+			prepare_serve = true
+#			var ball_on = Ball.instance()
+#			pos_ball.add_child(ball_on)
+			bola_aqui = true
 		if not is_moving and direction != Vector2():
 			target_direction = direction.normalized()
-			
 			if grid.is_cell_vacant(get_position(), direction):
 				target_pos = grid.update_child(get_position(), direction, type)
 				is_moving = true
@@ -113,6 +123,10 @@ func _physics_process(delta):
 				is_moving = false
 			else:
 				translate(motion)
+	elif character_select == false :
+		if bola_aqui == true:
+			pos_ball.remove_child(pos_ball.get_child(0))
+			bola_aqui = false
 	else:
 		pass
 #func _draw():

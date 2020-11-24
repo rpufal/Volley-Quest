@@ -1,0 +1,13 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://AssetsA/bola.png" type="Texture" id=1]
+[ext_resource path="res://Scripts/select_bola.gd" type="Script" id=2]
+
+[sub_resource type="CanvasItemMaterial" id=1]
+
+[node name="Bola" type="Sprite"]
+material = SubResource( 1 )
+position = Vector2( 6.29425e-05, 1.65641 )
+scale = Vector2( 0.0656231, 0.0656231 )
+texture = ExtResource( 1 )
+script = ExtResource( 2 )

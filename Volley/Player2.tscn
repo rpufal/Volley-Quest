@@ -17,9 +17,11 @@ __meta__ = {
 [node name="Sprite" type="AnimatedSprite" parent="."]
 position = Vector2( 0, -168 )
 frames = ExtResource( 2 )
-animation = "walk_nw"
-frame = 6
+animation = "idle_n"
 playing = true
+
+[node name="pos_ball" type="Position2D" parent="Sprite"]
+position = Vector2( 32.5269, 66.468 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource( 1 )

@@ -3,6 +3,7 @@ extends TileMap
 enum TIPOS{EMPTY, PLAYER, MOV_AVAILABLE, COLLECTIBLE, PLAYER2}
 
 var grid = []
+var grid_mov_available = []
 var grid_size = Vector2(18,30)
 var tile_size = cell_size
 var player_startpos = Vector2(8,8)
@@ -10,22 +11,29 @@ var player_startpos2 = Vector2(9,18)
 var player_startpos3 = Vector2(6,20)
 var player_startpos4 = Vector2(12,20)
 var player_startpos5 = Vector2(9,23)
+var ball_pos = Vector2()
 
 
 onready var Player2 = preload("res://Player2.tscn")
+onready var Ball = preload("res://Bola.tscn")
 onready var Sorter = get_child(2)
 
 func _ready():
 	#grid
 	for i in range(grid_size.x):
 		grid.append([])
+		grid_mov_available.append([])
 		for j in range(grid_size.y):
 			grid[i].append(TIPOS.EMPTY)
+			grid_mov_available[i].append(TIPOS.EMPTY)
 	#player
 #	var new_player = Player.instance()
 #	new_player.position = map_to_world(player_startpos)
 #	grid[player_startpos.x][player_startpos.y] = TIPOS.PLAYER
 #	Sorter.add_child(new_player)
+	
+	#var ball_on = Ball.instance()
+	
 	
 	var player_2 = Player2.instance()
 	player_2.position = map_to_world(player_startpos2)
@@ -58,12 +66,9 @@ func is_cell_vacant(pos, direction):
 			return true if grid[grid_pos.x][grid_pos.y]  == TIPOS.EMPTY else  false
 	return false
 
-func is_cell_vacant_click(target_position):
-	var grid_pos =  world_to_map(target_position)
-	if grid_pos.x < grid_size.x and grid_pos.x >= 0 :
-		if grid_pos.y < grid_size.y and grid_pos.y >= 0:
-			return true if grid[grid_pos.x][grid_pos.y]  == TIPOS.EMPTY else  false
-	return false
+func is_cell_vacant_mov(pos, direction):
+	var grid_pos =  world_to_map(pos) + direction
+	return true if grid_mov_available[grid_pos.x][grid_pos.y]  == TIPOS.MOV_AVAILABLE else  false
 func update_child(pos, direction, type):
 	var grid_pos = world_to_map(pos)
 	grid[grid_pos.x][grid_pos.y] = TIPOS.EMPTY
